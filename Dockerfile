@@ -24,8 +24,11 @@ RUN cd / \
   && wget https://github.com/bulletphysics/bullet3/archive/refs/tags/2.88.tar.gz \
   && tar -xzf 2.88.tar.gz \
   && cd bullet3-2.88 \
-  && ./build_cmake_pybullet_double.sh USE_DOUBLE_PRECISION=OFF \
+  && mkdir build_cmake \
   && cd build_cmake \
+  && cmake -DCMAKE_INSTALL_PREFIX=/install -DBUILD_PYBULLET=OFF -DBUILD_PYBULLET_NUMPY=OFF \
+  -DUSE_DOUBLE_PRECISION=OFF -DBT_USE_EGL=ON -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_POSITION_INDEPENDENT_CODE=ON .. \
   && make install \
   && cd / \
   && rm 2.88.tar.gz
@@ -37,7 +40,7 @@ RUN cd / \
   && cd eigen-3.3.7 \
   && mkdir build \
   && cd build \
-  && cmake .. \
+  && cmake .. -DCMAKE_INSTALL_PREFIX=/install \
   && make install \
   && cd / \
   && rm eigen-3.3.7.tar.gz
@@ -48,7 +51,7 @@ RUN wget --no-check-certificate https://github.com/FreeGLUTProject/freeglut/rele
   && cd freeglut-3.0.0 \
   && mkdir build \
   && cd build \
-  && cmake -DCMAKE_INSTALL_PREFIX=\usr .. \
+  && cmake -DCMAKE_INSTALL_PREFIX=/install .. \
   && make \
   && make install \
   && cd / \
@@ -58,7 +61,7 @@ RUN wget --no-check-certificate https://github.com/FreeGLUTProject/freeglut/rele
 RUN wget --no-check-certificate https://cfhcable.dl.sourceforge.net/project/glew/glew/2.1.0/glew-2.1.0.tgz \
   && tar -xzf glew-2.1.0.tgz \
   && cd glew-2.1.0 \
-  && make \
+  && make DESTDIR=/install \
   && make install \
   && make clean \
   && cd / \
